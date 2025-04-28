@@ -1,0 +1,184 @@
+/* Скидання стилів */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+  }
+  
+  /* Базові налаштування */
+  body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    line-height: 1.6;
+    background-color: #f9f9f9;
+    color: #333;
+  }
+  
+  /* Навігаційна панель */
+  .navbar {
+    background-color: #333;
+    padding: 1rem 0;
+  }
+  
+  .navbar .container {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+  
+  .navbar .logo {
+    color: #fff;
+    font-size: 1.5rem;
+    text-decoration: none;
+    font-weight: bold;
+  }
+  
+  .navbar .nav-links {
+    list-style: none;
+    display: flex;
+    gap: 1.5rem;
+  }
+  
+  .navbar .nav-links a {
+    color: #fff;
+    text-decoration: none;
+    font-size: 1.1rem;
+  }
+  
+  .navbar .nav-links a:hover {
+    text-decoration: underline;
+  }
+  
+  /* Основний контент */
+  .main-content {
+    padding: 2rem;
+  }
+  
+  .intro h1 {
+    font-size: 2.5rem;
+    margin-bottom: 1rem;
+  }
+  
+  .intro p {
+    font-size: 1.2rem;
+    margin-bottom: 1rem;
+  }
+  
+  .intro-image {
+    margin-top: 2rem;
+    width: 100%;
+    max-width: 700px;
+    display: block;
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+  }
+  
+  /* Футер */
+  .footer {
+    background-color: #333;
+    color: #fff;
+    text-align: center;
+    padding: 1rem 0;
+    margin-top: 3rem;
+  }
+
+  .clients-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 2rem;
+  }
+  
+  .add-btn {
+    padding: 0.5rem 1rem;
+    background-color: #28a745;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    font-size: 1rem;
+    cursor: pointer;
+  }
+  
+  .add-btn:hover {
+    background-color: #218838;
+  }
+  
+  .clients-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-bottom: 2rem;
+  }
+  
+  .clients-table th, .clients-table td {
+    padding: 0.75rem;
+    border: 1px solid #ddd;
+    text-align: left;
+  }
+  
+  .clients-table th {
+    background-color: #f2f2f2;
+  }
+  
+  .edit-btn, .delete-btn {
+    margin-right: 0.5rem;
+    padding: 0.4rem 0.8rem;
+    font-size: 0.9rem;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+  }
+  
+  .edit-btn {
+    background-color: #ffc107;
+    color: #000;
+  }
+  
+  .delete-btn {
+    background-color: #dc3545;
+    color: #fff;
+  }
+  
+  .edit-btn:hover {
+    background-color: #e0a800;
+  }
+  
+  .delete-btn:hover {
+    background-color: #c82333;
+  }
+  
+  .form-popup {
+    background: white;
+    padding: 2rem;
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+    max-width: 400px;
+    margin: 2rem auto;
+  }
+  
+  .hidden {
+    display: none;
+  }
+  
+  .form-group {
+    margin-bottom: 1rem;
+  }
+  
+  .save-btn, .cancel-btn {
+    margin-right: 0.5rem;
+    padding: 0.5rem 1rem;
+    border: none;
+    font-size: 1rem;
+    border-radius: 5px;
+    cursor: pointer;
+  }
+  
+  .save-btn {
+    background-color: #007bff;
+    color: white;
+  }
+  
+  .cancel-btn {
+    background-color: #6c757d;
+    color: white;
+  }
+  
+  
