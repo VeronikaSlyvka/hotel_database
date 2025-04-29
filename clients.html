@@ -3,20 +3,20 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Клієнти - HotelDB</title>
+  <title>Клієнти</title>
   <link rel="stylesheet" href="style.css">
 </head>
-<body>
 
+<body>
 <header>
   <nav class="navbar">
     <div class="container">
       <a href="index.html" class="logo">HotelDB</a>
       <ul class="nav-links">
         <li><a href="index.html">Головна</a></li>
-        <li><a href="clients.html">Клієнти</a></li>
+        <li><a href="clients.html" class="now">Клієнти</a></li>
         <li><a href="rooms.html">Кімнати</a></li>
-        <li><a href="settlements.html">Поселення</a></li>
+        <li><a href="bookings.html">Бронювання</a></li>
         <li><a href="invoices.html">Рахунки</a></li>
       </ul>
     </div>
@@ -30,7 +30,6 @@
       <button onclick="openAddForm()" class="add-btn">Додати клієнта</button>
     </div>
 
-    <!-- Таблиця клієнтів -->
     <table class="clients-table">
       <thead>
         <tr>
@@ -41,30 +40,29 @@
           <th>Дії</th>
         </tr>
       </thead>
-      <tbody id="clients-table-body">
-        <!-- Дані заповнюються через JavaScript -->
-      </tbody>
+      <tbody id="clients-table-body"> </tbody>
     </table>
 
-    <!-- Форма додавання/редагування клієнта -->
-    <div id="client-form" class="form-popup hidden">
+    <div id="client-form" class="form-container hidden">
       <h2 id="form-title">Додати клієнта</h2>
       <form id="clientForm">
         <input type="hidden" id="clientId">
         <div class="form-group">
-          <label for="fullName">ПІБ</label>
+          <label for="fullName">ПІБ (повністю)</label>
           <input type="text" id="fullName" required>
         </div>
         <div class="form-group">
           <label for="phone">Телефон</label>
-          <input type="text" id="phone" required>
+          <input type="text" id="phone"required>
         </div>
         <div class="form-group">
-          <label for="passport">Паспорт</label>
+          <label for="passport">Номер паспорта</label>
           <input type="text" id="passport" required>
         </div>
-        <button type="submit" class="save-btn">Зберегти</button>
-        <button type="button" onclick="closeForm()" class="cancel-btn">Скасувати</button>
+        <div class="save-cancel">
+          <button type="submit" class="save-btn">Зберегти</button>
+          <button type="button" onclick="closeForm()" class="cancel-btn">Скасувати</button>
+      </div>
       </form>
     </div>
 

@@ -41,6 +41,9 @@ function openAddForm() {
   document.getElementById('phone').value = '';
   document.getElementById('passport').value = '';
   document.getElementById('client-form').classList.remove('hidden');
+
+  // Прокрутка сторінки до форми
+  document.getElementById('client-form').scrollIntoView({ behavior: 'smooth' });
 }
 
 // Відкрити форму для редагування клієнта
@@ -51,12 +54,21 @@ function editClient(id, fullName, phone, passport) {
   document.getElementById('phone').value = phone;
   document.getElementById('passport').value = passport;
   document.getElementById('client-form').classList.remove('hidden');
+
+  // Прокрутка сторінки до форми
+  document.getElementById('client-form').scrollIntoView({ behavior: 'smooth' });
 }
 
-// Закрити форму
+// Закрити форму та очистити поля
 function closeForm() {
   document.getElementById('client-form').classList.add('hidden');
+  // Очищаємо поля форми
+  document.getElementById('fullName').value = '';
+  document.getElementById('phone').value = '';
+  document.getElementById('passport').value = '';
+  document.getElementById('clientId').value = ''; // очищаємо і прихований input (ID)
 }
+
 
 // Зберегти клієнта
 document.getElementById('clientForm').addEventListener('submit', async function(e) {

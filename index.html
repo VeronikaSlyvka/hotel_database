@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Головна - Курсова робота</title>
+  <title>Головна</title>
   <link rel="stylesheet" href="style.css">
 </head>
 <body>
@@ -11,12 +11,12 @@
   <header>
     <nav class="navbar">
       <div class="container">
-        <a href="index.html" class="logo">HotelDB</a>
-        <ul class="nav-links">
-          <li><a href="index.html">Головна</a></li>
+        <a href="index.html" class="logo">Hotel Database</a>
+        <ul class="nav-links" >
+          <li><a href="index.html" class="now" >Головна</a></li>
           <li><a href="clients.html">Клієнти</a></li>
           <li><a href="rooms.html">Кімнати</a></li>
-          <li><a href="settlements.html">Поселення</a></li>
+          <li><a href="bookings.html">Бронювання</a></li>
           <li><a href="invoices.html">Рахунки</a></li>
         </ul>
       </div>
@@ -25,24 +25,25 @@
 
   <main class="main-content">
     <section class="intro">
-      <h1>Курсова робота</h1>
-      <p>
-        Дана курсова робота присвячена розробці інформаційної системи для управління готелем.
-        Система дозволяє управляти клієнтами, номерами, бронюваннями та рахунками. 
-        Проект включає повний цикл роботи: створення, оновлення та видалення записів.
+      <h1>Курсова робота з баз даних студентки групи ІС-33 Сливки Вероніки</h1>
+      <hr>
+        <p class="b"><i>Предметна область № 31. Облік послуг готелю</i> </p> 
+      <p class="text">
+        Готель надає номери клієнтам на певний термін. Кожен номер характеризується місткістю, комфортністю 
+        (президентський, люкс, напівлюкс, звичайний) і ціною. При поселенні в готель клієнт вказує необхідні 
+        характеристики номера (місткість, комфортність); якщо є відповідні вільні номери, то клієнт займає номер.
+         При цьому адміністратор фіксує дані клієнта (ПІБ, контактний телефон, номер паспорта), дату поселення. 
+         При поселенні адміністратор також формує рахунок на оплату, який клієнт оплачує.  Власника готелю цікавить 
+         його заповненість по сезонах і комфортності номерів. 
       </p>
-      <p>
-        Для зберігання даних використовується база даних MS SQL Server. 
-        Серверна частина розроблена на Node.js з використанням Express.js. 
-        Фронтенд реалізований на чистому HTML, CSS та JavaScript.
-      </p>
-      <img src="hotel.jpg" alt="Зображення готелю" class="intro-image">
+    
+      <img src="hotel1.jpg" alt="Зображення готелю" class="intro-image">
     </section>
   </main>
 
   <footer class="footer">
     <div class="container">
-      <p>© 2025 HotelDB. Усі права захищені.</p>
+      <p>© 2025 Hotel Database by Veronika Slyvka</p>
     </div>
   </footer>
 
