@@ -1,10 +1,10 @@
-<!-- rooms.html -->
+<!-- invoices.html -->
 <!DOCTYPE html>
 <html lang="uk">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Кімнати</title>
+  <title>Рахунки</title>
   <link rel="stylesheet" href="style.css">
 </head>
 <body>
@@ -15,9 +15,9 @@
       <ul class="nav-links">
         <li><a href="index.html">Головна</a></li>
         <li><a href="clients.html">Клієнти</a></li>
-        <li><a href="rooms.html" class="now">Кімнати</a></li>
+        <li><a href="rooms.html">Кімнати</a></li>
         <li><a href="bookings.html">Бронювання</a></li>
-        <li><a href="invoices.html">Рахунки</a></li>
+        <li><a href="invoices.html" class="now">Рахунки</a></li>
       </ul>
     </div>
   </nav>
@@ -25,36 +25,36 @@
 <main class="main-content">
   <section class="clients-section">
     <div class="clients-header">
-      <h1>Кімнати</h1>
-      <button onclick="openAddForm()" class="add-btn">Додати кімнату</button>
+      <h1>Рахунки</h1>
+      <button onclick="openAddForm()" class="add-btn">Додати рахунок</button>
     </div>
     <table class="clients-table">
       <thead>
         <tr>
           <th>ID</th>
-          <th>Номер кімнати</th>
-          <th>Тип</th>
-          <th>Ціна</th>
+          <th>Клієнт</th>
+          <th>Сума</th>
+          <th>Статус</th>
           <th>Дії</th>
         </tr>
       </thead>
-      <tbody id="rooms-table-body"></tbody>
+      <tbody id="invoices-table-body"></tbody>
     </table>
-    <div id="room-form" class="form-container hidden">
-      <h2 id="form-title">Додати кімнату</h2>
-      <form id="roomForm">
-        <input type="hidden" id="roomId">
+    <div id="invoice-form" class="form-container hidden">
+      <h2 id="form-title">Додати рахунок</h2>
+      <form id="invoiceForm">
+        <input type="hidden" id="invoiceId">
         <div class="form-group">
-          <label for="number">Номер кімнати</label>
-          <input type="text" id="number" required>
+          <label for="clientId">ID клієнта</label>
+          <input type="text" id="clientId" required>
         </div>
         <div class="form-group">
-          <label for="type">Тип</label>
-          <input type="text" id="type" required>
+          <label for="amount">Сума</label>
+          <input type="text" id="amount" required>
         </div>
         <div class="form-group">
-          <label for="price">Ціна</label>
-          <input type="text" id="price" required>
+          <label for="status">Статус</label>
+          <input type="text" id="status" required>
         </div>
         <div class="save-cancel">
           <button type="submit" class="save-btn">Зберегти</button>
@@ -68,6 +68,6 @@
   <div class="container">
     <p>© 2025 Hotel Database by Veronika Slyvka</p>  </div>
 </footer>
-<script src="./rooms.js"></script>
+<script src="invoices.js"></script>
 </body>
 </html>
