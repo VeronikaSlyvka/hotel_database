@@ -1,91 +1,117 @@
 const apiUrl = 'http://localhost:3000/rooms';
 
-// Отримати всі кімнати
-async function fetchRooms() {
-  const response = await fetch(apiUrl);
-  const rooms = await response.json();
-  renderRooms(rooms);
-}
+// Завантажити кімнати при завантаженні сторінки
+document.addEventListener('DOMContentLoaded', loadRooms);
 
-// Створити нову кімнату
-async function createRoom(event) {
-  event.preventDefault();
+// Завантаження списку кімнат
+async function loadRooms() {
+  try {
+    const res = await fetch(apiUrl);
+    const rooms = await res.json();
+    const tableBody = document.getElementById('rooms-table-body');
+    tableBody.innerHTML = '';
 
-  const capacity = document.getElementById('capacity').value;
-  const comfort = document.getElementById('comfort').value;
-  const price = document.getElementById('price').value;
+    rooms.forEach(room => {
+      const row = document.createElement('tr');
 
-  const response = await fetch(apiUrl, {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json',
-    },
-    body: JSON.stringify({ capacity, comfort, price }),
-  });
+      row.innerHTML = `
+        <td>${room.RoomID}</td>
+        <td>${room.Capacity}</td>
+        <td>${room.Comfort}</td>
+        <td>${room.Price}</td>
+        <td>
+          <button onclick="editRoom(${room.RoomID}, ${room.Capacity}, '${room.Comfort}', ${room.Price})" class="edit-btn">Редагувати</button>
+          <button onclick="deleteRoom(${room.RoomID})" class="delete-btn">Видалити</button>
+        </td>
+      `;
 
-  if (response.ok) {
-    alert('Room created');
-    fetchRooms();  // Оновити список кімнат
-  } else {
-    alert('Error creating room');
+      tableBody.appendChild(row);
+    });
+
+  } catch (error) {
+    console.error('Помилка завантаження кімнат:', error);
   }
 }
 
-// Оновити кімнату
-async function updateRoom(id) {
-  const capacity = document.getElementById('capacity').value;
-  const comfort = document.getElementById('comfort').value;
+// Відкрити форму для додавання нової кімнати
+function openAddForm() {
+  document.getElementById('form-title').textContent = 'Додати кімнату';
+  document.getElementById('roomId').value = '';
+  document.getElementById('number').value = '';
+  document.getElementById('type').value = '';
+  document.getElementById('price').value = '';
+  document.getElementById('room-form').classList.remove('hidden');
+
+  document.getElementById('room-form').scrollIntoView({ behavior: 'smooth' });
+}
+
+// Відкрити форму для редагування кімнати
+function editRoom(id, capacity, comfort, price) {
+  document.getElementById('form-title').textContent = 'Редагувати кімнату';
+  document.getElementById('roomId').value = id;
+  document.getElementById('number').value = capacity;
+  document.getElementById('type').value = comfort;
+  document.getElementById('price').value = price;
+  document.getElementById('room-form').classList.remove('hidden');
+
+  document.getElementById('room-form').scrollIntoView({ behavior: 'smooth' });
+}
+
+// Закрити форму
+function closeForm() {
+  document.getElementById('room-form').classList.add('hidden');
+  document.getElementById('roomId').value = '';
+  document.getElementById('number').value = '';
+  document.getElementById('type').value = '';
+  document.getElementById('price').value = '';
+}
+
+// Зберегти кімнату
+async function saveRoom() {
+  const id = document.getElementById('roomId').value;
+  const capacity = document.getElementById('number').value;
+  const comfort = document.getElementById('type').value;
   const price = document.getElementById('price').value;
 
-  const response = await fetch(`${apiUrl}/${id}`, {
-    method: 'PUT',
-    headers: {
-      'Content-Type': 'application/json',
-    },
-    body: JSON.stringify({ capacity, comfort, price }),
-  });
+  const roomData = {
+    capacity: parseInt(capacity),
+    comfort,
+    price: parseFloat(price)
+  };
 
-  if (response.ok) {
-    alert('Room updated');
-    fetchRooms();  // Оновити список кімнат
-  } else {
-    alert('Error updating room');
+  try {
+    let res;
+    if (id) {
+      res = await fetch(`${apiUrl}/${id}`, {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(roomData)
+      });
+    } else {
+      res = await fetch(apiUrl, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(roomData)
+      });
+    }
+
+    if (!res.ok) throw new Error('Не вдалося зберегти кімнату');
+    closeForm();
+    loadRooms();
+  } catch (error) {
+    console.error('Помилка збереження кімнати:', error);
   }
 }
 
 // Видалити кімнату
 async function deleteRoom(id) {
-  const response = await fetch(`${apiUrl}/${id}`, { method: 'DELETE' });
+  if (!confirm('Ви впевнені, що хочете видалити цю кімнату?')) return;
 
-  if (response.ok) {
-    alert('Room deleted');
-    fetchRooms();  // Оновити список кімнат
-  } else {
-    alert('Error deleting room');
+  try {
+    const res = await fetch(`${apiUrl}/${id}`, { method: 'DELETE' });
+    if (!res.ok) throw new Error('Не вдалося видалити кімнату');
+    loadRooms();
+  } catch (error) {
+    console.error('Помилка видалення кімнати:', error);
   }
 }
-
-// Відобразити кімнати
-function renderRooms(rooms) {
-    const roomList = document.getElementById('rooms-table-body'); // змінено на правильний id
-    roomList.innerHTML = '';
-    
-    rooms.forEach(room => {
-      const roomRow = document.createElement('tr'); // створюємо рядок таблиці
-      roomRow.innerHTML = `
-        <td>${room.RoomID}</td>
-        <td>${room.Number}</td>
-        <td>${room.Type}</td>
-        <td>${room.Price}</td>
-        <td>
-          <button onclick="updateRoom(${room.RoomID})">Оновити</button>
-          <button onclick="deleteRoom(${room.RoomID})">Видалити</button>
-        </td>
-      `;
-      roomList.appendChild(roomRow); // додаємо рядок до таблиці
-    });
-  }
-  
-
-// Викликати функцію для отримання кімнат при завантаженні сторінки
-fetchRooms();
