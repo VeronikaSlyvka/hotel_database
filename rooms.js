@@ -1,5 +1,3 @@
-// rooms.js
-
 const apiUrl = 'http://localhost:3000/rooms';
 
 // Отримати всі кімнати
