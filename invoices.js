@@ -2,6 +2,10 @@ const apiUrl = 'http://localhost:3000/invoices';
 
 // Завантажити рахунки при завантаженні сторінки
 document.addEventListener('DOMContentLoaded', loadInvoices);
+document.getElementById('invoiceForm').addEventListener('submit', function (e) {
+  e.preventDefault(); // Запобігає перезавантаженню сторінки
+  saveInvoice();
+});
 
 // Завантаження списку рахунків
 async function loadInvoices() {

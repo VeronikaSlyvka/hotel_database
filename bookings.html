@@ -6,6 +6,8 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Бронювання</title>
   <link rel="stylesheet" href="style.css">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/choices.js/public/assets/styles/choices.min.css" />
+  <script src="https://cdn.jsdelivr.net/npm/choices.js/public/assets/scripts/choices.min.js"></script>
 </head>
 <body>
 <header>
@@ -47,19 +49,19 @@
         <input type="hidden" id="bookingId">
         <div class="form-group">
           <label for="clientId">ID клієнта</label>
-          <input type="text" id="clientId" required>
+          <select id="clientId" required></select>
         </div>
         <div class="form-group">
           <label for="roomId">ID кімнати</label>
-          <input type="text" id="roomId" required>
+          <select id="roomId" required></select>
         </div>
         <div class="form-group">
           <label for="dateFrom">Дата заїзду</label>
-          <input type="text" id="dateFrom" required>
+          <input type="date" id="dateFrom" required>
         </div>
         <div class="form-group">
           <label for="dateTo">Дата виїзду</label>
-          <input type="text" id="dateTo" required>
+          <input type="date" id="dateTo" required>
         </div>
         <div class="save-cancel">
           <button type="submit" class="save-btn">Зберегти</button>
