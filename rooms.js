@@ -2,6 +2,11 @@ const apiUrl = 'http://localhost:3000/rooms';
 
 // Завантажити кімнати при завантаженні сторінки
 document.addEventListener('DOMContentLoaded', loadRooms);
+document.getElementById('roomForm').addEventListener('submit', function (e) {
+  e.preventDefault(); // Запобігає перезавантаженню сторінки
+  saveRoom();
+});
+
 
 // Завантаження списку кімнат
 async function loadRooms() {
@@ -50,7 +55,7 @@ function editRoom(id, capacity, comfort, price) {
   document.getElementById('form-title').textContent = 'Редагувати кімнату';
   document.getElementById('roomId').value = id;
   document.getElementById('number').value = capacity;
-  document.getElementById('type').value = comfort;
+  document.getElementById('type').value = comfort.toLowerCase();
   document.getElementById('price').value = price;
   document.getElementById('room-form').classList.remove('hidden');
 

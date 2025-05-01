@@ -47,11 +47,24 @@
         <input type="hidden" id="roomId">
         <div class="form-group">
           <label for="number">Місткість</label>
-          <input type="text" id="number" required>
+          <select id="number" required>
+            <option value="">Оберіть місткість</option>
+            <option value="1">1</option>
+            <option value="2">2</option>
+            <option value="3">3</option>
+            <option value="4">4</option>
+            <option value="5">5</option>
+          </select>
         </div>
         <div class="form-group">
           <label for="type">Комфортність</label>
-          <input type="text" id="type" required>
+          <select id="type" required>
+            <option value="">Оберіть рівень комфортності</option>
+            <option value="звичайний">Звичайний</option>
+            <option value="напівлюкс">Напівлюкс</option>
+            <option value="люкс">Люкс</option>
+            <option value="президентський">Президентський</option>
+          </select>
         </div>
         <div class="form-group">
           <label for="price">Ціна</label>

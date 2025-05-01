@@ -3,6 +3,12 @@ const apiUrl = 'http://localhost:3000/bookings';
 // Завантажити бронювання при завантаженні сторінки
 document.addEventListener('DOMContentLoaded', loadBookings);
 
+document.getElementById('roomForm').addEventListener('submit', function (e) {
+  e.preventDefault(); // Запобігає перезавантаженню сторінки
+  saveRoom();
+});
+
+
 // Завантаження списку бронювань
 async function loadBookings() {
   try {
@@ -38,8 +44,8 @@ async function loadBookings() {
 function openAddForm() {
   document.getElementById('form-title').textContent = 'Додати бронювання';
   document.getElementById('bookingId').value = '';
-  document.getElementById('clientID').value = '';
-  document.getElementById('roomID').value = '';
+  document.getElementById('clientId').value = '';
+  document.getElementById('roomId').value = '';
   document.getElementById('dateFrom').value = '';
   document.getElementById('dateTo').value = '';
   document.getElementById('booking-form').classList.remove('hidden');
@@ -51,8 +57,8 @@ function openAddForm() {
 function editBooking(id, clientID, roomID, checkIN, checkOut) {
   document.getElementById('form-title').textContent = 'Редагувати бронювання';
   document.getElementById('bookingId').value = id;
-  document.getElementById('clientID').value = clientID;
-  document.getElementById('roomID').value = roomID;
+  document.getElementById('clientId').value = clientID;
+  document.getElementById('roomId').value = roomID;
   document.getElementById('dateFrom').value = checkIN;
   document.getElementById('dateTo').value = checkOut;
   document.getElementById('booking-form').classList.remove('hidden');
@@ -64,17 +70,18 @@ function editBooking(id, clientID, roomID, checkIN, checkOut) {
 function closeForm() {
   document.getElementById('booking-form').classList.add('hidden');
   document.getElementById('bookingId').value = '';
-  document.getElementById('clientID').value = '';
-  document.getElementById('roomID').value = '';
+  document.getElementById('clientId').value = '';
+  document.getElementById('roomId').value = '';
   document.getElementById('dateFrom').value = '';
   document.getElementById('dateTo').value = '';
 }
 
+
 // Зберегти бронювання (додати або оновити)
 async function saveBooking() {
   const id = document.getElementById('bookingId').value;
-  const clientID = document.getElementById('clientID').value;
-  const roomID = document.getElementById('roomID').value;
+  const clientID = document.getElementById('clientId').value;
+  const roomID = document.getElementById('roomId').value;
   const checkIN = document.getElementById('dateFrom').value;
   const checkOut = document.getElementById('dateTo').value;
 
