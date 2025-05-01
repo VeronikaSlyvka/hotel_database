@@ -15,7 +15,7 @@ const sqlConfig = {
     encrypt: false,
     trustServerCertificate: true,
     trustedConnection: true
-  }
+  } 
 };
 
 app.get('/', (req, res) => {
@@ -169,14 +169,14 @@ app.get('/bookings', async (req, res) => {
 // Додати бронювання
 app.post('/bookings', async (req, res) => {
   try {
-    const { clientID, roomID, checkIN, checkOut } = req.body;
+    const { clientID, roomID, checkIn, checkOut } = req.body;
     let pool = await mssql.connect(sqlConfig);
     await pool.request()
       .input('clientID', mssql.Int, clientID)
       .input('roomID', mssql.Int, roomID)
-      .input('checkIN', mssql.Date, checkIN)
+      .input('checkIn', mssql.Date, checkIn)
       .input('checkOut', mssql.Date, checkOut)
-      .query('INSERT INTO HotelDB.dbo.Bookings (ClientID, RoomID, CheckIN, CheckOut) VALUES (@clientID, @roomID, @checkIN, @checkOut)');
+      .query('INSERT INTO HotelDB.dbo.Bookings (ClientID, RoomID, CheckIn, CheckOut) VALUES (@clientID, @roomID, @checkIn, @checkOut)');
     res.send('Booking created');
   } catch (error) {
     console.error(error);
@@ -187,16 +187,16 @@ app.post('/bookings', async (req, res) => {
 // Оновити бронювання
 app.put('/bookings/:id', async (req, res) => {
   try {
-    const { clientID, roomID, checkIN, checkOut } = req.body;
+    const { clientID, roomID, checkIn, checkOut } = req.body;
     const { id } = req.params;
     let pool = await mssql.connect(sqlConfig);
     await pool.request()
       .input('id', mssql.Int, id)
       .input('clientID', mssql.Int, clientID)
       .input('roomID', mssql.Int, roomID)
-      .input('checkIN', mssql.Date, checkIN)
+      .input('checkIn', mssql.Date, checkIn)
       .input('checkOut', mssql.Date, checkOut)
-      .query('UPDATE HotelDB.dbo.Bookings SET ClientID = @clientID, RoomID = @roomID, CheckIN = @checkIN, CheckOut = @checkOut WHERE BookingID = @id');
+      .query('UPDATE HotelDB.dbo.Bookings SET ClientID = @clientID, RoomID = @roomID, CheckIn = @checkIn, CheckOut = @checkOut WHERE BookingID = @id');
     res.send('Booking updated');
   } catch (error) {
     console.error(error);

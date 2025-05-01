@@ -8,7 +8,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     e.preventDefault();
     saveBooking();
   });
-});
+}); 
 
 let clientChoices, roomChoices;
 
@@ -62,10 +62,10 @@ async function loadBookings() {
         <td>${booking.BookingID}</td>
         <td>${client ? client.FullName : 'Невідомо'}</td>
         <td>${room ? `Кімната ${room.RoomID} (${room.Comfort})` : booking.RoomID}</td>
-        <td>${booking.CheckIN ? booking.CheckIN.slice(0, 10) : ''}</td>
+        <td>${booking.CheckIn ? booking.CheckIn.slice(0, 10) : ''}</td>
         <td>${booking.CheckOut ? booking.CheckOut.slice(0, 10) : ''}</td>
         <td>
-          <button onclick="editBooking(${booking.BookingID}, ${booking.ClientID}, ${booking.RoomID}, '${booking.CheckIN}', '${booking.CheckOut}')" class="edit-btn">Редагувати</button>
+          <button onclick="editBooking(${booking.BookingID}, ${booking.ClientID}, ${booking.RoomID}, '${booking.CheckIn}', '${booking.CheckOut}')" class="edit-btn">Редагувати</button>
           <button onclick="deleteBooking(${booking.BookingID})" class="delete-btn">Видалити</button>
         </td>
       `;
@@ -87,12 +87,12 @@ function openAddForm() {
   document.getElementById('booking-form').scrollIntoView({ behavior: 'smooth' });
 }
 
-function editBooking(id, clientID, roomID, checkIN, checkOut) {
+function editBooking(id, clientID, roomID, checkIn, checkOut) {
   document.getElementById('form-title').textContent = 'Редагувати бронювання';
   document.getElementById('bookingId').value = id;
   clientChoices.setChoiceByValue(clientID.toString());
   roomChoices.setChoiceByValue(roomID.toString());
-  document.getElementById('dateFrom').value = checkIN.slice(0, 10);
+  document.getElementById('dateFrom').value = checkIn.slice(0, 10);
   document.getElementById('dateTo').value = checkOut.slice(0, 10);
   document.getElementById('booking-form').classList.remove('hidden');
   document.getElementById('booking-form').scrollIntoView({ behavior: 'smooth' });
@@ -111,15 +111,16 @@ async function saveBooking() {
   const id = document.getElementById('bookingId').value;
   const clientID = document.getElementById('clientId').value;
   const roomID = document.getElementById('roomId').value;
-  const checkIN = document.getElementById('dateFrom').value;
+  const checkIn = document.getElementById('dateFrom').value;
   const checkOut = document.getElementById('dateTo').value;
 
   const bookingData = {
-    ClientID: parseInt(clientID),
-    RoomID: parseInt(roomID),
-    CheckIN: checkIN,
-    CheckOut: checkOut
+    clientID: parseInt(clientID),
+    roomID: parseInt(roomID),
+    checkIn: checkIn,
+    checkOut: checkOut
   };
+
 
   try {
     if (id) {
