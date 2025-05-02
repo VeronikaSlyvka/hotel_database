@@ -1,114 +1,153 @@
 const apiUrl = 'http://localhost:3000/invoices';
+let bookings = [], clients = [], rooms = [], bookingChoices;
 
-// Завантажити рахунки при завантаженні сторінки
-document.addEventListener('DOMContentLoaded', loadInvoices);
-document.getElementById('invoiceForm').addEventListener('submit', function (e) {
-  e.preventDefault(); // Запобігає перезавантаженню сторінки
-  saveInvoice();
+document.addEventListener('DOMContentLoaded', async () => {
+  await loadDependencies();
+  loadInvoices();
+
+  document.getElementById('invoiceForm').addEventListener('submit', function (e) {
+    e.preventDefault();
+    saveInvoice();
+  });
+
+  document.getElementById('bookingId').addEventListener('change', updateAmount);
 });
 
-// Завантаження списку рахунків
+async function loadDependencies() {
+  const [bookingsRes, clientsRes, roomsRes] = await Promise.all([
+    fetch('http://localhost:3000/bookings'),
+    fetch('http://localhost:3000/clients'),
+    fetch('http://localhost:3000/rooms')
+  ]);
+
+  bookings = await bookingsRes.json();
+  clients = await clientsRes.json();
+  rooms = await roomsRes.json();
+
+  const bookingSelect = document.getElementById('bookingId');
+  bookingSelect.innerHTML = bookings.map(b => {
+    const client = clients.find(c => c.ClientID === b.ClientID);
+    return `<option value="${b.BookingID}">${b.BookingID} (${client ? client.FullName : 'Невідомо'})</option>`;
+  }).join('');
+
+  if (bookingChoices) bookingChoices.destroy();
+  bookingChoices = new Choices(bookingSelect, { searchEnabled: true });
+}
+
+
 async function loadInvoices() {
   try {
     const res = await fetch(apiUrl);
     const invoices = await res.json();
+
     const tableBody = document.getElementById('invoices-table-body');
     tableBody.innerHTML = '';
 
     invoices.forEach(invoice => {
-      const row = document.createElement('tr');
+      const booking = bookings.find(b => b.BookingID === invoice.BookingID);
+      const client = clients.find(c => c.ClientID === (booking ? booking.ClientID : null));
 
+      const row = document.createElement('tr');
       row.innerHTML = `
         <td>${invoice.InvoiceID}</td>
-        <td>${invoice.BookingID}</td>
-        <td>${invoice.Amount}</td>
+        <td>${invoice.BookingID} (${client ? client.FullName : 'Невідомо'})</td>
+        <td>${invoice.InvoiceDate ? invoice.InvoiceDate.slice(0, 10) : ''}</td>
+        <td>${invoice.Amount} грн</td>
         <td>${invoice.PaymentStatus}</td>
-        <td>${new Date(invoice.InvoiceDate).toLocaleDateString()}</td>
         <td>
-          <button onclick="editInvoice(${invoice.InvoiceID}, ${invoice.BookingID}, ${invoice.Amount}, '${invoice.PaymentStatus}', '${invoice.InvoiceDate}')" class="edit-btn">Редагувати</button>
+          <button onclick="editInvoice(${invoice.InvoiceID})" class="edit-btn">Редагувати</button>
           <button onclick="deleteInvoice(${invoice.InvoiceID})" class="delete-btn">Видалити</button>
         </td>
       `;
-
       tableBody.appendChild(row);
     });
-
   } catch (error) {
     console.error('Помилка завантаження рахунків:', error);
   }
 }
 
-// Відкрити форму для додавання рахунку
+
+function updateAmount() {
+  const bookingID = parseInt(document.getElementById('bookingId').value);
+  const booking = bookings.find(b => b.BookingID === bookingID);
+  if (!booking) return;
+
+  const room = rooms.find(r => r.RoomID === booking.RoomID);
+  const checkIn = new Date(booking.CheckIn);
+  const checkOut = new Date(booking.CheckOut);
+  const days = Math.ceil((checkOut - checkIn) / (1000 * 60 * 60 * 24));
+
+  const amount = days * parseFloat(room.Price);
+  document.getElementById('amountDisplay').textContent = `Сума: ${amount.toFixed(2)} грн`;
+  document.getElementById('calculatedAmount').value = amount.toFixed(2);
+}
+
 function openAddForm() {
   document.getElementById('form-title').textContent = 'Додати рахунок';
   document.getElementById('invoiceId').value = '';
-  document.getElementById('clientId').value = '';
-  document.getElementById('amount').value = '';
-  document.getElementById('status').value = '';
+  bookingChoices.setChoiceByValue('');
   document.getElementById('date').value = '';
+  document.getElementById('status').value = 'сплачено';
+  document.getElementById('amountDisplay').textContent = 'Сума: 0 грн';
+  document.getElementById('calculatedAmount').value = '';
   document.getElementById('invoice-form').classList.remove('hidden');
   document.getElementById('invoice-form').scrollIntoView({ behavior: 'smooth' });
 }
 
-// Відкрити форму для редагування рахунку
-function editInvoice(id, bookingID, amount, paymentStatus, invoiceDate) {
+async function editInvoice(id) {
+  const res = await fetch(`${apiUrl}/${id}`);
+  const invoice = await res.json();
+
   document.getElementById('form-title').textContent = 'Редагувати рахунок';
-  document.getElementById('invoiceId').value = id;
-  document.getElementById('clientId').value = bookingID;
-  document.getElementById('amount').value = amount;
-  document.getElementById('status').value = paymentStatus;
-  document.getElementById('date').value = invoiceDate.split('T')[0];
+  document.getElementById('invoiceId').value = invoice.InvoiceID;
+  bookingChoices.setChoiceByValue(invoice.BookingID.toString());
+  document.getElementById('date').value = invoice.InvoiceDate.slice(0, 10);
+  document.getElementById('status').value = invoice.PaymentStatus;
+  document.getElementById('calculatedAmount').value = invoice.Amount;
+  document.getElementById('amountDisplay').textContent = `Сума: ${invoice.Amount} грн`;
   document.getElementById('invoice-form').classList.remove('hidden');
   document.getElementById('invoice-form').scrollIntoView({ behavior: 'smooth' });
 }
 
-// Закрити форму
 function closeForm() {
   document.getElementById('invoice-form').classList.add('hidden');
-  document.getElementById('invoiceId').value = '';
-  document.getElementById('clientId').value = '';
-  document.getElementById('amount').value = '';
-  document.getElementById('status').value = '';
-  document.getElementById('date').value = '';
+  document.getElementById('invoiceForm').reset();
+  document.getElementById('amountDisplay').textContent = 'Сума: 0 грн';
+  bookingChoices.setChoiceByValue('');
 }
 
-// Зберегти рахунок (новий або оновлений)
-async function saveInvoice(event) {
-  event.preventDefault();
-
+async function saveInvoice() {
   const id = document.getElementById('invoiceId').value;
-  const invoice = {
-    bookingID: document.getElementById('invoiceId').value,
-    amount: document.getElementById('amount').value,
-    paymentStatus: document.getElementById('status').value,
-    invoiceDate: document.getElementById('date').value
+  const bookingID = document.getElementById('bookingId').value;
+  const invoiceDate = document.getElementById('date').value;
+  const paymentStatus = document.getElementById('status').value;
+  const amount = parseFloat(document.getElementById('calculatedAmount').value);
+
+  const invoiceData = {
+    bookingID: parseInt(bookingID),
+    invoiceDate,
+    paymentStatus,
+    amount
   };
 
   try {
-    const res = await fetch(id ? `${apiUrl}/${id}` : apiUrl, {
-      method: id ? 'PUT' : 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(invoice)
-    });
-
-    if (!res.ok) throw new Error('Помилка при збереженні рахунку');
+    if (id) {
+      await fetch(`${apiUrl}/${id}`, {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(invoiceData)
+      });
+    } else {
+      await fetch(apiUrl, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(invoiceData)
+      });
+    }
 
     closeForm();
     loadInvoices();
   } catch (error) {
-    console.error('Помилка при збереженні:', error);
-  }
-}
-
-// Видалити рахунок
-async function deleteInvoice(id) {
-  if (!confirm('Ви впевнені, що хочете видалити цей рахунок?')) return;
-
-  try {
-    const res = await fetch(`${apiUrl}/${id}`, { method: 'DELETE' });
-    if (!res.ok) throw new Error('Помилка при видаленні');
-    loadInvoices();
-  } catch (error) {
-    console.error('Помилка при видаленні рахунку:', error);
+    console.error('Помилка збереження рахунку:', error);
   }
 }
