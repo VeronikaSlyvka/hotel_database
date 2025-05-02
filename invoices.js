@@ -55,12 +55,25 @@ async function loadInvoices() {
         <td>${invoice.Amount} грн</td>
         <td>${invoice.PaymentStatus}</td>
         <td>
-          <button onclick="editInvoice(${invoice.InvoiceID})" class="edit-btn">Редагувати</button>
-          <button onclick="deleteInvoice(${invoice.InvoiceID})" class="delete-btn">Видалити</button>
+          <button class="edit-btn" data-id="${invoice.InvoiceID}">Редагувати</button>
+          <button class="delete-btn" data-id="${invoice.InvoiceID}">Видалити</button>
         </td>
       `;
       tableBody.appendChild(row);
     });
+
+    document.querySelectorAll('.edit-btn').forEach(button => {
+      button.addEventListener('click', function () {
+        editInvoice(this.dataset.id);
+      });
+    });
+
+    document.querySelectorAll('.delete-btn').forEach(button => {
+      button.addEventListener('click', function () {
+        deleteInvoice(this.dataset.id);
+      });
+    });
+
   } catch (error) {
     console.error('Помилка завантаження рахунків:', error);
   }
@@ -95,18 +108,33 @@ function openAddForm() {
 }
 
 async function editInvoice(id) {
-  const res = await fetch(`${apiUrl}/${id}`);
-  const invoice = await res.json();
+  try {
+    const res = await fetch(`${apiUrl}/${id}`);
+    const invoice = await res.json();
 
-  document.getElementById('form-title').textContent = 'Редагувати рахунок';
-  document.getElementById('invoiceId').value = invoice.InvoiceID;
-  bookingChoices.setChoiceByValue(invoice.BookingID.toString());
-  document.getElementById('date').value = invoice.InvoiceDate.slice(0, 10);
-  document.getElementById('status').value = invoice.PaymentStatus;
-  document.getElementById('calculatedAmount').value = invoice.Amount;
-  document.getElementById('amountDisplay').textContent = `Сума: ${invoice.Amount} грн`;
-  document.getElementById('invoice-form').classList.remove('hidden');
-  document.getElementById('invoice-form').scrollIntoView({ behavior: 'smooth' });
+    document.getElementById('form-title').textContent = 'Редагувати рахунок';
+    document.getElementById('invoiceId').value = invoice.InvoiceID;
+    bookingChoices.setChoiceByValue(invoice.BookingID.toString());
+    document.getElementById('date').value = invoice.InvoiceDate.slice(0, 10);
+    document.getElementById('status').value = invoice.PaymentStatus;
+    document.getElementById('calculatedAmount').value = invoice.Amount;
+    document.getElementById('amountDisplay').textContent = `Сума: ${invoice.Amount} грн`;
+    document.getElementById('invoice-form').classList.remove('hidden');
+    document.getElementById('invoice-form').scrollIntoView({ behavior: 'smooth' });
+  } catch (error) {
+    console.error('Помилка редагування рахунку:', error);
+  }
+}
+
+async function deleteInvoice(id) {
+  if (!confirm('Ви впевнені, що хочете видалити цей рахунок?')) return;
+
+  try {
+    await fetch(`${apiUrl}/${id}`, { method: 'DELETE' });
+    loadInvoices();  // Після видалення перезавантажуємо таблицю
+  } catch (error) {
+    console.error('Помилка видалення рахунку:', error);
+  }
 }
 
 function closeForm() {
