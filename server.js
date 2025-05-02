@@ -232,6 +232,28 @@ app.get('/invoices', async (req, res) => {
     res.status(500).send('Server error');
   }
 });
+;
+
+// Отримати рахунок за ID
+app.get('/invoices/:id', async (req, res) => {
+  try {
+    const { id } = req.params;
+    let pool = await mssql.connect(sqlConfig);
+    let result = await pool.request()
+      .input('id', mssql.Int, id)
+      .query('SELECT * FROM HotelDB.dbo.Invoices WHERE InvoiceID = @id');
+    
+    if (result.recordset.length === 0) {
+      return res.status(404).send('Invoice not found');
+    }
+
+    res.json(result.recordset[0]); // Return the single invoice
+  } catch (error) {
+    console.error(error);
+    res.status(500).send('Server error');
+  }
+});
+
 
 // Додати рахунок
 app.post('/invoices', async (req, res) => {
@@ -270,6 +292,8 @@ app.put('/invoices/:id', async (req, res) => {
     res.status(500).send('Server error');
   }
 });
+
+
 
 // Видалити рахунок
 app.delete('/invoices/:id', async (req, res) => {

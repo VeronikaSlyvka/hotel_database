@@ -49,21 +49,23 @@ async function loadInvoices() {
 
       const row = document.createElement('tr');
       row.innerHTML = `
-        <td>${invoice.InvoiceID}</td>
-        <td>${invoice.BookingID} (${client ? client.FullName : 'Невідомо'})</td>
-        <td>${invoice.InvoiceDate ? invoice.InvoiceDate.slice(0, 10) : ''}</td>
-        <td>${invoice.Amount} грн</td>
-        <td>${invoice.PaymentStatus}</td>
-        <td>
-          <button class="edit-btn" data-id="${invoice.InvoiceID}">Редагувати</button>
-          <button class="delete-btn" data-id="${invoice.InvoiceID}">Видалити</button>
-        </td>
-      `;
+      <td>${invoice.InvoiceID}</td>
+      <td>${invoice.BookingID} (${client ? client.FullName : 'Невідомо'})</td>
+      <td>${invoice.InvoiceDate ? invoice.InvoiceDate.slice(0, 10) : ''}</td>
+      <td>${invoice.Amount} грн</td>
+      <td>${invoice.PaymentStatus}</td>
+      <td>
+        <button class="edit-btn" data-id="${invoice.InvoiceID}">Редагувати</button>
+        <button class="delete-btn" data-id="${invoice.InvoiceID}">Видалити</button>
+      </td>
+    `;
+    
       tableBody.appendChild(row);
     });
 
     document.querySelectorAll('.edit-btn').forEach(button => {
       button.addEventListener('click', function () {
+        console.log('Edit button clicked');
         editInvoice(this.dataset.id);
       });
     });
@@ -111,6 +113,8 @@ async function editInvoice(id) {
   try {
     const res = await fetch(`${apiUrl}/${id}`);
     const invoice = await res.json();
+    console.log('Invoice data:', invoice);
+
 
     document.getElementById('form-title').textContent = 'Редагувати рахунок';
     document.getElementById('invoiceId').value = invoice.InvoiceID;
