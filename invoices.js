@@ -135,7 +135,7 @@ async function deleteInvoice(id) {
 
   try {
     await fetch(`${apiUrl}/${id}`, { method: 'DELETE' });
-    loadInvoices();  // Після видалення перезавантажуємо таблицю
+    loadInvoices();  
   } catch (error) {
     console.error('Помилка видалення рахунку:', error);
   }

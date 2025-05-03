@@ -24,7 +24,6 @@ app.get('/', (req, res) => {
 
 // ======================= ROOMS =======================
 
-// Отримати всі кімнати
 app.get('/rooms', async (req, res) => {
   try {
     let pool = await mssql.connect(sqlConfig);
@@ -36,7 +35,6 @@ app.get('/rooms', async (req, res) => {
   }
 });
 
-// Створити нову кімнату
 app.post('/rooms', async (req, res) => {
   try {
     const { capacity, comfort, price } = req.body;
@@ -53,7 +51,6 @@ app.post('/rooms', async (req, res) => {
   }
 });
 
-// Оновити кімнату
 app.put('/rooms/:id', async (req, res) => {
   try {
     const { capacity, comfort, price } = req.body;
@@ -72,14 +69,12 @@ app.put('/rooms/:id', async (req, res) => {
   }
 });
 
-// Видалити кімнату разом з усіма пов'язаними бронюваннями та рахунками
 app.delete('/rooms/:id', async (req, res) => {
   const { id } = req.params;
 
   try {
     let pool = await mssql.connect(sqlConfig);
 
-    // Видалити рахунки, пов'язані з бронюваннями цієї кімнати
     await pool.request()
       .input('roomId', mssql.Int, id)
       .query(`
@@ -89,12 +84,10 @@ app.delete('/rooms/:id', async (req, res) => {
         )
       `);
 
-    // Видалити бронювання цієї кімнати
-    await pool.request()
+      await pool.request()
       .input('roomId', mssql.Int, id)
       .query('DELETE FROM HotelDB.dbo.Bookings WHERE RoomID = @roomId');
 
-    // Видалити саму кімнату
     await pool.request()
       .input('id', mssql.Int, id)
       .query('DELETE FROM HotelDB.dbo.Rooms WHERE RoomID = @id');
@@ -109,7 +102,6 @@ app.delete('/rooms/:id', async (req, res) => {
 
 // ======================= CLIENTS =======================
 
-// Отримати всіх клієнтів
 app.get('/clients', async (req, res) => {
   try {
     let pool = await mssql.connect(sqlConfig);
@@ -121,7 +113,6 @@ app.get('/clients', async (req, res) => {
   }
 });
 
-// Додати клієнта
 app.post('/clients', async (req, res) => {
   try {
     const { fullName, phone, passport } = req.body;
@@ -138,7 +129,6 @@ app.post('/clients', async (req, res) => {
   }
 });
 
-// Оновити клієнта
 app.put('/clients/:id', async (req, res) => {
   try {
     const { fullName, phone, passport } = req.body;
@@ -157,14 +147,12 @@ app.put('/clients/:id', async (req, res) => {
   }
 });
 
-// Видалити клієнта та пов'язані з ним бронювання і рахунки
 app.delete('/clients/:id', async (req, res) => {
   const { id } = req.params;
 
   try {
     let pool = await mssql.connect(sqlConfig);
 
-    // Видалити рахунки, пов'язані з бронюваннями клієнта
     await pool.request()
       .input('clientId', mssql.Int, id)
       .query(`
@@ -174,12 +162,10 @@ app.delete('/clients/:id', async (req, res) => {
         )
       `);
 
-    // Видалити бронювання клієнта
     await pool.request()
       .input('clientId', mssql.Int, id)
       .query('DELETE FROM HotelDB.dbo.Bookings WHERE ClientID = @clientId');
 
-    // Видалити самого клієнта
     await pool.request()
       .input('id', mssql.Int, id)
       .query('DELETE FROM HotelDB.dbo.Clients WHERE ClientID = @id');
@@ -194,7 +180,6 @@ app.delete('/clients/:id', async (req, res) => {
 
 // ======================= BOOKINGS =======================
 
-// Отримати всі бронювання
 app.get('/bookings', async (req, res) => {
   try {
     let pool = await mssql.connect(sqlConfig);
@@ -206,7 +191,6 @@ app.get('/bookings', async (req, res) => {
   }
 });
 
-// Додати бронювання
 app.post('/bookings', async (req, res) => {
   try {
     const { clientID, roomID, checkIn, checkOut } = req.body;
@@ -224,7 +208,6 @@ app.post('/bookings', async (req, res) => {
   }
 });
 
-// Оновити бронювання
 app.put('/bookings/:id', async (req, res) => {
   try {
     const { clientID, roomID, checkIn, checkOut } = req.body;
@@ -244,19 +227,16 @@ app.put('/bookings/:id', async (req, res) => {
   }
 });
 
-// Видалити бронювання та пов'язані рахунки
 app.delete('/bookings/:id', async (req, res) => {
   const { id } = req.params;
 
   try {
     let pool = await mssql.connect(sqlConfig);
 
-    // Видалити рахунки, пов'язані з цим бронюванням
     await pool.request()
       .input('bookingId', mssql.Int, id)
       .query('DELETE FROM HotelDB.dbo.Invoices WHERE BookingID = @bookingId');
 
-    // Видалити саме бронювання
     await pool.request()
       .input('id', mssql.Int, id)
       .query('DELETE FROM HotelDB.dbo.Bookings WHERE BookingID = @id');
@@ -271,7 +251,6 @@ app.delete('/bookings/:id', async (req, res) => {
 
 // ======================= INVOICES =======================
 
-// Отримати всі рахунки
 app.get('/invoices', async (req, res) => {
   try {
     let pool = await mssql.connect(sqlConfig);
@@ -284,7 +263,6 @@ app.get('/invoices', async (req, res) => {
 });
 ;
 
-// Отримати рахунок за ID
 app.get('/invoices/:id', async (req, res) => {
   try {
     const { id } = req.params;
@@ -297,7 +275,7 @@ app.get('/invoices/:id', async (req, res) => {
       return res.status(404).send('Invoice not found');
     }
 
-    res.json(result.recordset[0]); // Return the single invoice
+    res.json(result.recordset[0]); 
   } catch (error) {
     console.error(error);
     res.status(500).send('Server error');
@@ -305,7 +283,6 @@ app.get('/invoices/:id', async (req, res) => {
 });
 
 
-// Додати рахунок
 app.post('/invoices', async (req, res) => {
   try {
     const { bookingID, amount, paymentStatus, invoiceDate } = req.body;
@@ -323,7 +300,6 @@ app.post('/invoices', async (req, res) => {
   }
 });
 
-// Оновити рахунок
 app.put('/invoices/:id', async (req, res) => {
   try {
     const { bookingID, amount, paymentStatus, invoiceDate } = req.body;
@@ -343,9 +319,6 @@ app.put('/invoices/:id', async (req, res) => {
   }
 });
 
-
-
-// Видалити рахунок
 app.delete('/invoices/:id', async (req, res) => {
   try {
     const { id } = req.params;

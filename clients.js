@@ -1,9 +1,7 @@
 const apiUrl = 'http://localhost:3000/clients';
 
-// Завантажити клієнтів при завантаженні сторінки
 document.addEventListener('DOMContentLoaded', loadClients);
 
-// Завантаження списку клієнтів
 async function loadClients() {
   try {
     const res = await fetch(apiUrl);
@@ -33,7 +31,6 @@ async function loadClients() {
   }
 }
 
-// Відкрити форму для додавання нового клієнта
 function openAddForm() {
   document.getElementById('form-title').textContent = 'Додати клієнта';
   document.getElementById('clientId').value = '';
@@ -42,11 +39,9 @@ function openAddForm() {
   document.getElementById('passport').value = '';
   document.getElementById('client-form').classList.remove('hidden');
 
-  // Прокрутка сторінки до форми
   document.getElementById('client-form').scrollIntoView({ behavior: 'smooth' });
 }
 
-// Відкрити форму для редагування клієнта
 function editClient(id, fullName, phone, passport) {
   document.getElementById('form-title').textContent = 'Редагувати клієнта';
   document.getElementById('clientId').value = id;
@@ -55,22 +50,18 @@ function editClient(id, fullName, phone, passport) {
   document.getElementById('passport').value = passport;
   document.getElementById('client-form').classList.remove('hidden');
 
-  // Прокрутка сторінки до форми
   document.getElementById('client-form').scrollIntoView({ behavior: 'smooth' });
 }
 
-// Закрити форму та очистити поля
 function closeForm() {
   document.getElementById('client-form').classList.add('hidden');
-  // Очищаємо поля форми
   document.getElementById('fullName').value = '';
   document.getElementById('phone').value = '';
   document.getElementById('passport').value = '';
-  document.getElementById('clientId').value = ''; // очищаємо і прихований input (ID)
+  document.getElementById('clientId').value = ''; 
 }
 
 
-// Зберегти клієнта
 document.getElementById('clientForm').addEventListener('submit', async function(e) {
   e.preventDefault();
   const id = document.getElementById('clientId').value;
@@ -80,14 +71,12 @@ document.getElementById('clientForm').addEventListener('submit', async function(
 
   try {
     if (id) {
-      // Оновити існуючого клієнта
       await fetch(`${apiUrl}/${id}`, {
         method: 'PUT',
         headers: {'Content-Type': 'application/json'},
         body: JSON.stringify({ fullName, phone, passport })
       });
     } else {
-      // Додати нового клієнта
       await fetch(apiUrl, {
         method: 'POST',
         headers: {'Content-Type': 'application/json'},
@@ -101,7 +90,6 @@ document.getElementById('clientForm').addEventListener('submit', async function(
   }
 });
 
-// Видалити клієнта
 async function deleteClient(id) {
   if (confirm("Ви дійсно хочете видалити цього клієнта? При видаленні клієнта також видаляться всі пов'язані з ним бронювання та рахунки.")) {
     try {

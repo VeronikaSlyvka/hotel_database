@@ -1,14 +1,12 @@
 const apiUrl = 'http://localhost:3000/rooms';
 
-// Завантажити кімнати при завантаженні сторінки
 document.addEventListener('DOMContentLoaded', loadRooms);
 document.getElementById('roomForm').addEventListener('submit', function (e) {
-  e.preventDefault(); // Запобігає перезавантаженню сторінки
+  e.preventDefault();
   saveRoom();
 });
 
 
-// Завантаження списку кімнат
 async function loadRooms() {
   try {
     const res = await fetch(apiUrl);
@@ -38,7 +36,6 @@ async function loadRooms() {
   }
 }
 
-// Відкрити форму для додавання нової кімнати
 function openAddForm() {
   document.getElementById('form-title').textContent = 'Додати кімнату';
   document.getElementById('roomId').value = '';
@@ -50,7 +47,6 @@ function openAddForm() {
   document.getElementById('room-form').scrollIntoView({ behavior: 'smooth' });
 }
 
-// Відкрити форму для редагування кімнати
 function editRoom(id, capacity, comfort, price) {
   document.getElementById('form-title').textContent = 'Редагувати кімнату';
   document.getElementById('roomId').value = id;
@@ -62,7 +58,6 @@ function editRoom(id, capacity, comfort, price) {
   document.getElementById('room-form').scrollIntoView({ behavior: 'smooth' });
 }
 
-// Закрити форму
 function closeForm() {
   document.getElementById('room-form').classList.add('hidden');
   document.getElementById('roomId').value = '';
@@ -71,7 +66,6 @@ function closeForm() {
   document.getElementById('price').value = '';
 }
 
-// Зберегти кімнату
 async function saveRoom() {
   const id = document.getElementById('roomId').value;
   const capacity = document.getElementById('number').value;
@@ -108,7 +102,6 @@ async function saveRoom() {
   }
 }
 
-// Видалити кімнату
 async function deleteRoom(id) {
   if (!confirm("Ви впевнені, що хочете видалити цю кімнату? При видаленні кімнати видаляться також всі бронювання, пов'язані з цією кімнатою.")) return;
 

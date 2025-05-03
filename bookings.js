@@ -30,7 +30,6 @@ async function loadClientsAndRooms() {
   roomSelect.innerHTML = rooms.map(r =>
     `<option value="${r.RoomID}">Кімната ${r.RoomID} (${r.Comfort})</option>`).join('');
 
-  // Ініціалізація Choices.js
   if (clientChoices) clientChoices.destroy();
   if (roomChoices) roomChoices.destroy();
 
