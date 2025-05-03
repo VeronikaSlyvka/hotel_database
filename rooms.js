@@ -110,7 +110,7 @@ async function saveRoom() {
 
 // Видалити кімнату
 async function deleteRoom(id) {
-  if (!confirm('Ви впевнені, що хочете видалити цю кімнату?')) return;
+  if (!confirm("Ви впевнені, що хочете видалити цю кімнату? При видаленні кімнати видаляться також всі бронювання, пов'язані з цією кімнатою.")) return;
 
   try {
     const res = await fetch(`${apiUrl}/${id}`, { method: 'DELETE' });

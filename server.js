@@ -72,20 +72,40 @@ app.put('/rooms/:id', async (req, res) => {
   }
 });
 
-// Видалити кімнату
+// Видалити кімнату разом з усіма пов'язаними бронюваннями та рахунками
 app.delete('/rooms/:id', async (req, res) => {
+  const { id } = req.params;
+
   try {
-    const { id } = req.params;
     let pool = await mssql.connect(sqlConfig);
+
+    // Видалити рахунки, пов'язані з бронюваннями цієї кімнати
+    await pool.request()
+      .input('roomId', mssql.Int, id)
+      .query(`
+        DELETE FROM HotelDB.dbo.Invoices 
+        WHERE BookingID IN (
+          SELECT BookingID FROM HotelDB.dbo.Bookings WHERE RoomID = @roomId
+        )
+      `);
+
+    // Видалити бронювання цієї кімнати
+    await pool.request()
+      .input('roomId', mssql.Int, id)
+      .query('DELETE FROM HotelDB.dbo.Bookings WHERE RoomID = @roomId');
+
+    // Видалити саму кімнату
     await pool.request()
       .input('id', mssql.Int, id)
       .query('DELETE FROM HotelDB.dbo.Rooms WHERE RoomID = @id');
-    res.send('Room deleted');
+
+    res.send('Room and related bookings/invoices deleted');
   } catch (error) {
     console.error(error);
-    res.status(500).send('Server error');
+    res.status(500).send('Server error during room deletion');
   }
 });
+
 
 // ======================= CLIENTS =======================
 
@@ -137,20 +157,40 @@ app.put('/clients/:id', async (req, res) => {
   }
 });
 
-// Видалити клієнта
+// Видалити клієнта та пов'язані з ним бронювання і рахунки
 app.delete('/clients/:id', async (req, res) => {
+  const { id } = req.params;
+
   try {
-    const { id } = req.params;
     let pool = await mssql.connect(sqlConfig);
+
+    // Видалити рахунки, пов'язані з бронюваннями клієнта
+    await pool.request()
+      .input('clientId', mssql.Int, id)
+      .query(`
+        DELETE FROM HotelDB.dbo.Invoices 
+        WHERE BookingID IN (
+          SELECT BookingID FROM HotelDB.dbo.Bookings WHERE ClientID = @clientId
+        )
+      `);
+
+    // Видалити бронювання клієнта
+    await pool.request()
+      .input('clientId', mssql.Int, id)
+      .query('DELETE FROM HotelDB.dbo.Bookings WHERE ClientID = @clientId');
+
+    // Видалити самого клієнта
     await pool.request()
       .input('id', mssql.Int, id)
       .query('DELETE FROM HotelDB.dbo.Clients WHERE ClientID = @id');
-    res.send('Client deleted');
+
+    res.send('Client and related records deleted');
   } catch (error) {
     console.error(error);
-    res.status(500).send('Server error');
+    res.status(500).send('Server error during client deletion');
   }
 });
+
 
 // ======================= BOOKINGS =======================
 
@@ -204,20 +244,30 @@ app.put('/bookings/:id', async (req, res) => {
   }
 });
 
-// Видалити бронювання
+// Видалити бронювання та пов'язані рахунки
 app.delete('/bookings/:id', async (req, res) => {
+  const { id } = req.params;
+
   try {
-    const { id } = req.params;
     let pool = await mssql.connect(sqlConfig);
+
+    // Видалити рахунки, пов'язані з цим бронюванням
+    await pool.request()
+      .input('bookingId', mssql.Int, id)
+      .query('DELETE FROM HotelDB.dbo.Invoices WHERE BookingID = @bookingId');
+
+    // Видалити саме бронювання
     await pool.request()
       .input('id', mssql.Int, id)
       .query('DELETE FROM HotelDB.dbo.Bookings WHERE BookingID = @id');
-    res.send('Booking deleted');
+
+    res.send('Booking and related invoices deleted');
   } catch (error) {
     console.error(error);
-    res.status(500).send('Server error');
+    res.status(500).send('Server error during booking deletion');
   }
 });
+
 
 // ======================= INVOICES =======================
 

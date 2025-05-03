@@ -145,7 +145,7 @@ async function saveBooking() {
 }
 
 async function deleteBooking(id) {
-  if (!confirm('Ви впевнені, що хочете видалити це бронювання?')) return;
+  if (!confirm("Ви впевнені, що хочете видалити це бронювання? При видаленні бронювання видаляться також всі рахунки, пов'язані з цим бронюванням.")) return;
 
   try {
     await fetch(`${apiUrl}/${id}`, {

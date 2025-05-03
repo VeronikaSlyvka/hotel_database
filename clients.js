@@ -103,7 +103,7 @@ document.getElementById('clientForm').addEventListener('submit', async function(
 
 // Видалити клієнта
 async function deleteClient(id) {
-  if (confirm('Ви дійсно хочете видалити цього клієнта?')) {
+  if (confirm("Ви дійсно хочете видалити цього клієнта? При видаленні клієнта також видаляться всі пов'язані з ним бронювання та рахунки.")) {
     try {
       await fetch(`${apiUrl}/${id}`, { method: 'DELETE' });
       loadClients();
